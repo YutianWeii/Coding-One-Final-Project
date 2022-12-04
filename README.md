@@ -16,11 +16,13 @@ I used myCos, mySin, fract() to create a dazzling latticework image, maybe with 
  <img width="791" alt="屏幕截图 2022-12-03 145428" src="https://user-images.githubusercontent.com/115037554/205522553-52684225-9176-4840-9688-91a2f8d4d67f.png">
 
 
+
 The second design:
 gl_FragColor = vec4(  abs(cos(uv.y )* time) , fract( myTan * mouse.x), mySin, 1.0);
 I added tan() to the previous design to produce dazzling pink and yellow lines, which would go well with the techno music.
  
  <img width="794" alt="屏幕截图 2022-12-03 124035" src="https://user-images.githubusercontent.com/115037554/205522615-2b0a9a81-434e-4a51-9f10-f1aa752358c5.png">
+
 
 
 The third design:
@@ -61,9 +63,11 @@ gl_FragColor = vec4( color2 + color1, 1.0);
  <img width="793" alt="屏幕截图 2022-12-03 200340" src="https://user-images.githubusercontent.com/115037554/205522692-d81482fc-5e85-47b1-a526-73a3e156d45f.png">
 
 
+
 This result consists of  two parts. I first created the flowing black liquid (named color1) using loop.
 
  <img width="792" alt="屏幕截图 2022-12-03 163523" src="https://user-images.githubusercontent.com/115037554/205522696-4c30b598-ddac-4b30-bcfa-3ff986937aa3.png">
+
 
 
 I then used noise() and smoothstep tool to create a variation of the black and white image (named color2). Finally I added up color1 and color2.
@@ -77,7 +81,8 @@ gl_FragColor = vec4( color3 * abs(sin(time)) , color3 * abs(cos(time)), color3 *
 I borrowed the truchetPattern() from The book of shaders and also used floor(), fract() and random() to make different lines. As the mouse moves, they can be turned into triangles.
 
  <img width="795" alt="屏幕截图 2022-12-04 140738" src="https://user-images.githubusercontent.com/115037554/205522713-bb8ecb0d-f9a6-47d3-969e-60efcc2684c9.png">
- 
+
+
  <img width="791" alt="屏幕截图 2022-12-04 195116" src="https://user-images.githubusercontent.com/115037554/205522722-b7a47e17-5ca4-49be-9072-005863c7e45c.png">
 
 
@@ -93,7 +98,9 @@ Have a good holiday! Bye!
 
 Reference:
 https://freesound.org/search/?q=funk
+
 https://thebookofshaders.com/
+
 https://www.behance.net/search/projects?tracking_source=typeahead_search_direct&search=glsl
 
 
