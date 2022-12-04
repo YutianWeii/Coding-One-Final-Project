@@ -1,0 +1,461 @@
+<html>
+
+<head>
+  
+ <!-- this script holds a load of samples as raw data --> 
+ <script src = "https://mimicproject.com/libs/maximilian.js"></script>
+
+ 
+  <style>
+		body {
+			margin: 0px;
+			background-color: #000000;
+			overflow: hidden;
+		}
+	</style>
+     <script src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js"></script>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  
+   <script src = "https://mimicproject.com/libs/maximilian.js"></script>
+ <link href="https://fonts.googleapis.com/css?family=Staatliches" rel="stylesheet">  
+ <script src = "https://rawgit.com/nexus-js/ui/master/dist/NexusUI.js"></script>
+  <link rel="stylesheet" href="styleCSS" /> 
+</head>
+
+  
+<body>
+  	<script id="vertexShader" type="x-shader/x-vertex">
+		void main() { gl_Position = vec4( position, 1.0 ); }
+	</script>
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		//============================================================
+		//PUT YOUR GLSL CODE HERE
+		//============================================================
+
+ precision mediump float;
+        
+ uniform vec2 resolution;
+ uniform vec2 mouse;
+ uniform float time;
+ #define M_PI 3.14159265358979323846
+     
+     
+float random (vec2 st) {
+    return fract(sin(dot(st.xy,
+                         vec2(12.9898,78.233)))*
+        43758.5453123);
+}
+
+
+vec2 random2( vec2 p ) {
+    return fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))* 43758.5453);
+}
+
+
+float random3 (in float x) {
+    return fract(sin(x) * 1e4);
+}
+
+
+
+float noise (in vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+
+    vec2 u = f * f *(3.0 - 2.0 * f);
+
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1.0 - u.x) +
+            (d - b) * u.x * u.y;
+}
+
+
+vec2 rotate2D(vec2 _st, float _angle){
+    _st -= 0.5;
+    _st =  mat2(cos(_angle),-sin(_angle),
+                sin(_angle),cos(_angle)) * _st;
+    _st += 0.5;
+    return _st;
+}
+
+
+vec2 truchetPattern(in vec2 _st, in float _index){
+    _index = fract(((_index-0.5)*2.0));
+    if (_index > 0.75) {
+        _st = vec2(1.0) - _st;
+    } else if (_index > 0.5) {
+        _st = vec2(1.0-_st.x,_st.y);
+    } else if (_index > 0.25) {
+        _st = 1.0-vec2(1.0-_st.x,_st.y);
+    }
+    return _st;
+}
+
+
+float pattern(vec2 st, vec2 v, float t) {
+    vec2 p = floor(st + v);
+    return step(t, random(100.+ p *.000001)+ random3(p.x)* 0.5 );
+}
+
+
+
+void main() {
+    vec2 st = gl_FragCoord.xy/resolution;
+    vec2 uv = st * 2.0 - 1.0;
+    
+    vec2 toCenter = vec2(0.5)-st;
+    float angle = atan(toCenter.y, toCenter.x);
+    float radius = length(toCenter)* 2.0;
+    
+     st *= 8.;
+    vec2 i_st = floor(st);
+    vec2 f_st = fract(st);
+    vec2 i_uv = floor(uv);
+    vec2 f_uv = fract(uv);
+    
+    vec3 color1 = vec3(.0);
+    vec3 color2 = vec3(.0);
+    
+    
+    
+//There are combinations of functions, time, mouse etc.
+
+    float mySin = abs(sin(uv.x * M_PI * time)) ;
+    
+    float myCos = abs(cos(uv.y * M_PI * time));
+    
+    float myTan = abs(tan(uv.y * M_PI * 2.));
+    
+    float myTan2 = abs(tan(uv.y * time));
+    
+    float myAtan = abs(atan( uv.x * uv.y * M_PI));
+    
+    float myPow = (uv.x * time, uv.y * time); 
+    
+    float myCeil = ceil(uv.x /uv.y);
+    
+    float myMod = mod(uv.x * uv.y, 0.1);
+    
+    float myPow2 = pow(min(cos(M_PI * uv.x * 0.5 ), 1.0 - abs(uv.x)), 0.5);
+
+    
+
+//for design 7
+   float m_dist = 1.;  // minimum distance
+   
+    for (int j= -1; j <= 1; j++ ) {
+        for (int i= -1; i <= 1; i++ ) {
+
+            vec2 neighbor = vec2(float(i),float(j));
+
+            vec2 offset = random2(i_st + neighbor);
+
+            offset = 0.5 + 0.5 * sin(time + 6.2831 * offset);
+
+            vec2 pos = neighbor + offset - f_st;
+
+            float dist = length(pos);
+
+            m_dist = min(m_dist, m_dist * dist);
+        }
+    }
+    
+     
+      color1 += step(0.2 * mouse.x * mouse.y, m_dist);
+    
+      color2 += smoothstep(.15 * mouse.x, .3 * mouse.y, noise(uv * time)); 
+      color2 -= smoothstep(.35 * mouse.y, .5 * mouse.y, noise(uv * time )); 
+    
+    
+      
+ //for design 8
+       vec2 tile = truchetPattern( f_st, random( i_st));
+       float color3 = 0.0;
+       
+       color3 = smoothstep(tile.x - 0.1, tile.x, tile.y * mouse.x)-
+            smoothstep(tile.x, tile.x + 0.1, tile.y * mouse.y);
+      
+ 
+
+
+//There are different forms of my design, you could fork this project and uncomment them to watch！
+
+//It's a great idea to move your mouse with the music!
+
+
+
+     // 1. Plaid-shaped, jazz-infused vertigo    
+     gl_FragColor = vec4(  myCos * 2., mySin * mouse.x, fract(mySin * time * 0.5)* 5., 1.0);
+    
+    
+    
+     // 2. Dazzling pink and yellow, feeling the technno    
+     gl_FragColor = vec4(  abs(cos(uv.y )* time) , fract( myTan * mouse.x), mySin, 1.0);
+    
+    
+    
+     // 3. Dynamic polka dots on blue and green background, swing up with the house  
+     gl_FragColor = vec4( myAtan * myCos * mySin * mouse.x, 1.0 - uv.y, myPow2 , 1.0);
+    
+
+
+     // 4. Water ripples and summertime, listening to R&B style music
+      gl_FragColor = vec4( abs(sin(myCeil * time)), myPow2 * time, myMod * mouse.x * time,1.0);
+   
+   
+   
+     // 5. Psychedelic guitars, new and distinctive blue-green hair and blinding lights
+     gl_FragColor = vec4( mouse.x * mySin * myTan ,  myAtan, myCos / mySin, 1.0);
+   
+   
+   
+     // 6. Chaos after the disappearance of electronic signals, nostalgia and exile
+     //gl_FragColor = vec4( vec3( noise(vec2(20.0 * random(st * time) * mouse.x )* mouse.y ) ),1.0);    
+    
+    
+       
+     // 7. Dense patches, roaming in the distance
+     // gl_FragColor = vec4( color2 + color1, 1.0);
+    
+    
+    
+     // 8. Shifting triangles, strange and mysterious, listen to a metal song
+      //gl_FragColor = vec4( color3 * abs(sin(time)) , color3 * abs(cos(time)), color3 * 0.8, 1.0);
+    
+
+}
+
+
+
+	//============================================================
+		//END OF GLSL CODE
+		//============================================================
+	</script>
+	<script>
+		//change the resolution here. 1 is highest
+		var pixel_resolution = 2;
+		var container, stats;
+		var camera, scene, renderer;
+		var uniforms;
+		init();
+		animate();
+function init() { 
+			camera = new THREE.Camera();
+			camera.position.z = 1;
+			scene = new THREE.Scene();
+			var geometry = new THREE.PlaneBufferGeometry(2, 2);
+			uniforms = { time: { type: 'f', value: 1.0 }, resolution: { type: 'v2', value: new THREE.Vector2() }, mouse: {type: "v2", value: new THREE.Vector2()}};
+			var material = new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: document.getElementById('vertexShader').textContent, fragmentShader: document.getElementById('fragmentShader').textContent });
+			var mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+			renderer = new THREE.WebGLRenderer();
+			//Hack here to change resolution 
+			renderer.setPixelRatio(window.devicePixelRatio / pixel_resolution);
+			document.body.appendChild(renderer.domElement);
+			onWindowResize();
+			window.addEventListener('resize', onWindowResize, false);
+	        window.addEventListener('mousemove', onMouseMove, false);
+
+		}
+		function onWindowResize(event) {
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			uniforms.resolution.value.x = renderer.domElement.width;
+			uniforms.resolution.value.y = renderer.domElement.height;
+
+		}
+		function animate() {
+			requestAnimationFrame(animate);
+			render();
+		}
+		function onMouseMove( event ) {
+        	uniforms.mouse.value.x = 2 * ( event.clientX / window.innerWidth );
+ 	        uniforms.mouse.value.y = 2 * ( 1-(event.clientY) / window.innerHeight
+ 	        );
+        }
+		function render() {
+			uniforms.time.value += 0.01;
+			renderer.render(scene, camera);
+		}
+	</script>
+  
+
+</body>
+
+ <!-- this script holds an object that can be used to make all sorts of synths --> 
+  
+<script src="samples.js"></script>
+
+<!--deprecated older version of maxiLib-->
+<!--<script src="http://doc.gold.ac.uk/~mus02mg/maxiLib.js"></script>-->
+
+<script src="maxiSynth.js"></script>
+
+<!-- Our javascript code -->
+<script type="text/javascript">
+    var maximJs = maximilian();
+    var maxiSynth;
+
+
+    var kick;
+    var snare;
+    var hat;
+    
+    
+    var snort = [142,120,80,160,100,142,200,140];
+
+    var playHead = 0;
+
+    var mySynth = new maxiSynth();
+    var myOsc = new maximJs.maxiOsc();
+    var myOsc2 = new maximJs.maxiOsc();
+    var myOsc3 = new maximJs.maxiOsc();
+    var mySlew = new maximJs.maxiFilter();
+    var maxiAudio = new maximJs.maxiAudio();
+
+
+    maxiAudio.outputIsArray(true, 2);
+
+    maxiAudio.init();
+
+    var myClock = new maximJs.maxiClock();
+
+    var kick1 = new maximJs.maxiSample();
+    var snare1 = new maximJs.maxiSample();
+    var hat1 = new maximJs.maxiSample();
+    var beat = new maximJs.maxiSample();
+    var synth = new maximJs.maxiSample();
+    var drum = new maximJs.maxiSample();
+
+    var kickGain = 0;
+    var snareGain = 0;
+    var hatGain = 0;
+    var beatGain = 0;
+    var synthGain = 0;
+    var drumGain = 0;
+
+
+    myClock.setTempo(120);
+    myClock.setTicksPerBeat(4);
+
+
+    kick1.setSample(maximJs.maxiTools.getArrayAsVectorDbl(kick));
+    //snare1.setSample(maximJs.maxiTools.getArrayAsVectorDbl(snare));
+    //hat1.setSample(maximJs.maxiTools.getArrayAsVectorDbl(hat));
+  
+ 
+    maxiAudio.loadSample("guitar2.wav", snare1);
+    maxiAudio.loadSample("fk2.wav", hat1);
+    maxiAudio.loadSample("drum.wav", beat);
+    maxiAudio.loadSample("drum2.wav", drum);
+    maxiAudio.loadSample("funk.wav", synth);
+  
+
+    maxiAudio.play = function() {
+       
+        if (kick1.isReady() && snare1.isReady()) {
+
+            myClock.ticker();
+
+            if (myClock.tick) {
+                playHead++;
+
+                if (Math.random() > 0.75 && playHead % 16 == 0) {
+
+                    if (playHead % 8 === 0 || playHead % 16 == 9) {
+                        kickGain = 0.8;
+                    } else {
+                        kickGain = 0.3;
+                    }
+                    kick1.trigger();
+
+                    mySynth.saw = true;
+                    mySynth.frequency = snort[playHead % 4]/ 2;
+                    mySynth.adsr.setRelease(Math.random() * 150);
+                    mySynth.cutoff = 400;
+                    mySynth.adsrFilterMod = Math.random() * 500;
+                    mySynth.lfoFilterMod = Math.random() * 100;
+                    mySynth.lfoFrequency = Math.random() * 400;
+                    mySynth.Q = 2;
+                    mySynth.gain = 0.75;
+                    mySynth.adsr.trigger = 1;
+
+                } else if (playHead % 16 == 4 || Math.random() > 0.8 && playHead % 16 == 7 || playHead % 32 > 30) {
+                  if(playHead % 16 == 0 && Math.random() > 0.8){
+                    
+                    snareGain = 0.8;
+                    
+                   } else {                     
+                      snareGain = 0.4;
+                    }
+                  
+
+                    snare1.trigger();
+
+                }
+
+                if (playHead % 16 == 9 && Math.random() < 0.1) {
+
+                    hat1.trigger();
+                    hatGain = 0.4;
+
+                }
+              
+              if ( Math.random() < 0.2){
+                
+                    beat.trigger(); 
+                 }
+              
+              if (playHead % 16 == 3 && Math.random() > 0.5){
+                
+                    drum.trigger(); 
+                    drumGain = 0.6;
+                 }
+              
+              if (playHead % 16 == 0 && Math.random() > 0.5){
+                 
+                if(playHead % 16 == 3 && Math.random() < 0.4){
+                    
+                    synthGain = 0.8;
+                    
+                   } else {                     
+                      synthGain = 0.2;
+                    }
+                
+                    synth.trigger(); 
+                 }
+
+            }
+
+            var kickOut = kick1.playOnce() ;
+
+            var snareOut = snare1.playOnce() ;
+
+            var hatOut = hat1.playOnce() ;
+            
+            var beatOut = beat.playOnce() ;
+           
+            var drumOut = drum.playOnce();
+          
+            var synthOut = synth.playOnce() ;
+
+          
+          
+          var mix = 1.0 * (kickOut * kickGain + drumOut * drumGain + hatOut * hatGain + snareOut * snareGain + synthOut * synthGain + (mySynth.play())) + (myOsc.sinewave(100 + (myOsc2.sinewave(10) * (myOsc3.sinewave(0.14583333333334) * 10))) / 50);
+          
+            mySynth.adsr.trigger = 0;
+
+            return mix;
+
+
+        }
+    }
+
+</script>
+
+
+</html>
