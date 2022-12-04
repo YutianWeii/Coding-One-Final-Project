@@ -40,6 +40,7 @@ I added ceil(), mod(), pow() to create ripple shapes. The yellow-green colour is
  <img width="790" alt="屏幕截图 2022-12-03 195724" src="https://user-images.githubusercontent.com/115037554/205522640-fdc84935-71e6-4bfe-ae14-8a865a7746c6.png">
 
  
+ 
 
 The fifth design:
 gl_FragColor = vec4( mouse.x * mySin * myTan ,  myAtan, myCos / mySin, 1.0);
@@ -91,12 +92,15 @@ I borrowed the truchetPattern() from The book of shaders and also used floor(), 
 Every experiment was full of surprises. I did the maths with different functions, not really knowing what picture I would end up creating. These random, unknown results kept me going. After a dozen experiments, I discovered that the visual and auditory senses can be close to each other and accommodate each other, that they do not correspond to each other. Different visual representations of the same piece of music combined with mouse interaction can be immersive. At the same time, the senses of sight and hearing are mutually reinforcing. When our eyes, ears and body are engaged at the same time, we can enjoy it better.
 
 Hope you enjoy it! 
+
 Have a good holiday! Bye! 
 
 
 
 
+
 Reference:
+
 https://freesound.org/search/?q=funk
 
 https://thebookofshaders.com/
