@@ -10,6 +10,7 @@ Then I used GLSL to create 8 visual effects for the music, using different funct
 The logic of my visualisation experiment is to use sin(), cos(), tan(), atan(), fract(), pow(), ceil(), mod() and other functions to operate on st.x and st.y respectively. Then multiply them with time, mouse.x and mouse.y to achieve dynamic interaction.
 
 The first design: 
+
 gl_FragColor = vec4(  myCos * 2., mySin * mouse.x,  fract(mySin * time * 0.5)* 5., 1.0);
 
 I used myCos, mySin, fract() to create a dazzling latticework image, maybe with jazz?
@@ -19,6 +20,7 @@ I used myCos, mySin, fract() to create a dazzling latticework image, maybe with 
 
 
 The second design:
+
 gl_FragColor = vec4(  abs(cos(uv.y )* time) , fract( myTan * mouse.x), mySin, 1.0);
 
 I added tan() to the previous design to produce dazzling pink and yellow lines, which would go well with the techno music.
@@ -28,6 +30,7 @@ I added tan() to the previous design to produce dazzling pink and yellow lines, 
 
 
 The third design:
+
 gl_FragColor = vec4( myAtan * myCos * mySin * mouse.x, 1.0 - uv.y, myPow2 , 1.0);
 
 I added atan() and pow() functions, which produced a more variable pattern on the screen. The gradient blue and green split the screen in half, while some changing polka dots appear.
@@ -37,6 +40,7 @@ I added atan() and pow() functions, which produced a more variable pattern on th
  
 
 The forth design:
+
 gl_FragColor = vec4( abs(sin(myCeil * time)), myPow2 * time, myMod * mouse.x * time,1.0);
 
 I added ceil(), mod(), pow() to create ripple shapes. The yellow-green colour is reminiscent of summer. At this moment I would like to listen to an R&B song.
@@ -47,6 +51,7 @@ I added ceil(), mod(), pow() to create ripple shapes. The yellow-green colour is
  
 
 The fifth design:
+
 gl_FragColor = vec4( mouse.x * mySin * myTan ,  myAtan, myCos / mySin, 1.0);
 
 I tried multiplying mySin() with myTan(), which created some ovals. myCos divided by mySin also created some shuttle shapes. This image makes it looks like psychedelic guitars, new and distinctive blue-green hair and blinding lights.
@@ -56,6 +61,7 @@ I tried multiplying mySin() with myTan(), which created some ovals. myCos divide
  
 
 The sixth design:
+
 gl_FragColor = vec4( vec3( noise(vec2(20.0 * random(st * time) * mouse.x )* mouse.y ) ),1.0);
 
 I added the noise() and random() before void main() to get the chaotic effect of the electronic signal disappearing. Then I added the time, mouse.x and mouse.y to do the arithmetic.
@@ -65,6 +71,7 @@ I added the noise() and random() before void main() to get the chaotic effect of
  
 
 The seventh design:
+
 gl_FragColor = vec4( color2 + color1, 1.0);
  
  <img width="793" alt="屏幕截图 2022-12-03 200340" src="https://user-images.githubusercontent.com/115037554/205522692-d81482fc-5e85-47b1-a526-73a3e156d45f.png">
@@ -84,6 +91,7 @@ I then used noise() and smoothstep tool to create a variation of the black and w
 
 
 The eighth design:
+
 gl_FragColor = vec4( color3 * abs(sin(time)) , color3 * abs(cos(time)), color3 * 0.8, 1.0);
 
 I borrowed the truchetPattern() from The book of shaders and also used floor(), fract() and random() to make different lines. As the mouse moves, they can be turned into triangles.
