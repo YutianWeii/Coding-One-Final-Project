@@ -1,10 +1,9 @@
 # Coding-One-Final-Project
 
-This is a URL to my Mimic project.
+This is a URL to my Mimic project. (If there is no music, please click on the render code button to run the project again.)
 
 https://mimicproject.com/code/30b8262f-a55c-4706-e935-e0506f4769b2
 
-(If there is no music, please click on the render code button to run the project again.)
 
 
 This is a URL to my project video!
