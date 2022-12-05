@@ -1,13 +1,16 @@
 # Coding-One-Final-Project
 
 This is a URL to my Mimic project.
+
 https://mimicproject.com/code/30b8262f-a55c-4706-e935-e0506f4769b2
+
 (If there is no music, please click on the render code button to run the project again.)
 
+
 This is a URL to my project video!
+
 https://vimeo.com/777934315
 
-https://mimicproject.com/code/30b8262f-a55c-4706-e935-e0506f4769b2
 
 
 At the end of this semester, I combined the methods of making sounds that I learnt in the first two weeks with the GLSL I learnt in the last week to create a 'Visual & Auditory Fitter'. People can move the mouse to interact with the music and the different colours and shapes will help us to achieve a dynamic unity between sight and sound.
